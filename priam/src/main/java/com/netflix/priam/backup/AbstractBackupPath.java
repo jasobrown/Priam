@@ -49,7 +49,7 @@ public abstract class AbstractBackupPath implements Comparable<AbstractBackupPat
     };
 
     protected BackupFileType type;
-    protected String clusterName;
+    protected String applicationName;
     protected String keyspace;
     protected String columnFamily;
     protected String fileName;
@@ -94,7 +94,7 @@ public abstract class AbstractBackupPath implements Comparable<AbstractBackupPat
 
         String rpath = new File(config.getDataFileLocation()).toURI().relativize(file.toURI()).getPath();
         String[] elements = rpath.split("" + PATH_SEP);
-        this.clusterName = config.getAppName();
+        this.applicationName = config.getApplicationName();
         this.baseDir = config.getBackupLocation();
         this.region = config.getDC();
         this.token = factory.getInstance().getToken();
@@ -194,9 +194,9 @@ public abstract class AbstractBackupPath implements Comparable<AbstractBackupPat
         return type;
     }
 
-    public String getClusterName()
+    public String getApplicationName()
     {
-        return clusterName;
+        return applicationName;
     }
 
     public String getKeyspace()

@@ -251,7 +251,7 @@ public class BackupServlet
      */
     private String closestToken(String token, String region)
     {
-        List<PriamInstance> plist = factory.getAllIds(config.getAppName());
+        List<PriamInstance> plist = factory.getAllIds(config.getApplicationName());
         List<BigInteger> tokenList = Lists.newArrayList();
         for (PriamInstance ins : plist)
         {
@@ -288,7 +288,7 @@ public class BackupServlet
                 JSONObject backupJSON = new JSONObject();
 				backupJSON.put("bucket", config.getBackupPrefix());
 				backupJSON.put("filename", p.getRemotePath());
-				backupJSON.put("app", p.getClusterName());
+				backupJSON.put("app", p.getApplicationName());
 				backupJSON.put("region", p.getRegion());
 				backupJSON.put("token", p.getToken());
 				backupJSON.put("ts", new DateTime(p.getTime()).toString(FMT));

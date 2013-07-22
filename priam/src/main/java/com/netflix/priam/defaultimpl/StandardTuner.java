@@ -37,7 +37,7 @@ public class StandardTuner implements CassandraTuner
         Yaml yaml = new Yaml(options);
         File yamlFile = new File(yamlLocation);
         Map map = (Map) yaml.load(new FileInputStream(yamlFile));
-        map.put("cluster_name", config.getAppName());
+        map.put("cluster_name", config.getClusterName());
         map.put("storage_port", config.getStoragePort());
         map.put("ssl_storage_port", config.getSSLStoragePort());
         map.put("rpc_port", config.getThriftPort());

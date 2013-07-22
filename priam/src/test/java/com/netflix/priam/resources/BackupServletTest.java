@@ -17,7 +17,6 @@ import com.netflix.priam.identity.PriamInstance;
 import com.netflix.priam.utils.CassandraTuner;
 import com.netflix.priam.utils.ITokenManager;
 import com.netflix.priam.utils.TokenManager;
-import com.netflix.priam.utils.TuneCassandra;
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.NonStrict;
@@ -179,7 +178,7 @@ public class BackupServletTest
 //                
 //                config.setDC(newRegion);
 //                instance.getToken(); result = oldToken;
-//                config.getAppName(); result = appName;
+//                config.getApplicationName(); result = appName;
 //                factory.getAllIds(appName); result = ImmutableList.of(instance, instance1, instance2, instance3);
 //                instance.getDC();  result = oldRegion;
 //                instance.getToken(); result = oldToken;
@@ -323,7 +322,7 @@ public class BackupServletTest
 
                 config.isRestoreClosestToken(); result = true;
                 instance.getToken(); result = oldToken;
-                config.getAppName(); result = appName;
+                config.getApplicationName(); result = appName;
                 factory.getAllIds(appName); result = ImmutableList.of(instance, instance1, instance2, instance3);
                 instance.getDC();  result = oldRegion;
                 instance.getToken(); result = oldToken;

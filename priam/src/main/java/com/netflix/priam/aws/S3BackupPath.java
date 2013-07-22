@@ -56,7 +56,7 @@ public class S3BackupPath extends AbstractBackupPath
         StringBuffer buff = new StringBuffer();
         buff.append(baseDir).append(S3BackupPath.PATH_SEP); // Base dir
         buff.append(region).append(S3BackupPath.PATH_SEP);
-        buff.append(clusterName).append(S3BackupPath.PATH_SEP);// Cluster name
+        buff.append(applicationName).append(S3BackupPath.PATH_SEP);// Cluster name
         buff.append(token).append(S3BackupPath.PATH_SEP);
         buff.append(formatDate(time)).append(S3BackupPath.PATH_SEP);
         buff.append(type).append(S3BackupPath.PATH_SEP);
@@ -88,7 +88,7 @@ public class S3BackupPath extends AbstractBackupPath
                 setCassandra1_0(true);
         baseDir = pieces.get(0);
         region = pieces.get(1);
-        clusterName = pieces.get(2);
+        applicationName = pieces.get(2);
         token = pieces.get(3);
         time = parseDate(pieces.get(4));
         type = BackupFileType.valueOf(pieces.get(5));
@@ -117,7 +117,7 @@ public class S3BackupPath extends AbstractBackupPath
         assert pieces.size() >= 4 : "Too few elements in path " + remoteFilePath;
         baseDir = pieces.get(0);
         region = pieces.get(1);
-        clusterName = pieces.get(2);
+        applicationName = pieces.get(2);
         token = pieces.get(3);
     }
 
@@ -130,18 +130,18 @@ public class S3BackupPath extends AbstractBackupPath
         {
             baseDir = config.getBackupLocation();
             region = config.getDC();
-            clusterName = config.getAppName();
+            applicationName = config.getApplicationName();
         }
         else
         {
             assert elements.length >= 4 : "Too few elements in path " + location;
             baseDir = elements[1];
             region = elements[2];
-            clusterName = elements[3];
+            applicationName = elements[3];
         }
         buff.append(baseDir).append(S3BackupPath.PATH_SEP);
         buff.append(region).append(S3BackupPath.PATH_SEP);
-        buff.append(clusterName).append(S3BackupPath.PATH_SEP);
+        buff.append(applicationName).append(S3BackupPath.PATH_SEP);
 
         token = factory.getInstance().getToken();
         buff.append(token).append(S3BackupPath.PATH_SEP);
@@ -159,18 +159,18 @@ public class S3BackupPath extends AbstractBackupPath
         {
             baseDir = config.getBackupLocation();
             region = config.getDC();
-            clusterName = config.getAppName();
+            applicationName = config.getApplicationName();
         }
         else
         {
             assert elements.length >= 4 : "Too few elements in path " + location;
             baseDir = elements[1];
             region = elements[2];
-            clusterName = elements[3];
+            applicationName = elements[3];
         }
         buff.append(baseDir).append(S3BackupPath.PATH_SEP);
         buff.append(region).append(S3BackupPath.PATH_SEP);
-        buff.append(clusterName).append(S3BackupPath.PATH_SEP);
+        buff.append(applicationName).append(S3BackupPath.PATH_SEP);
 
         return buff.toString();
     }

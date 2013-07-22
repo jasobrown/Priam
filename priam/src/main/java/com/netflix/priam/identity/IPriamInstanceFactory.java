@@ -29,15 +29,27 @@ import java.util.Map;
 public interface IPriamInstanceFactory
 {
     /**
-     * Return a list of all Cassandra server nodes registered.
-     * @param appName the cluster name
+     * Return a list of all Cassandra server nodes registered for the given application name.
+     *
+     * @param appName the app name
      * @return a list of all nodes in {@code appName}
      */
     public List<PriamInstance> getAllIds(String appName);
 
     /**
+     * Return a list of all Cassandra server nodes registered for the cluster.
+     * Ata minimum this will contain the same values as {@code getAllIds}, but could be a superset
+     * if running multiple cassandra datacenters in one ec2 region (this is the use case for
+     * Datastax Enterprise). The DCs have different names, yet belong to the same cluster.
+     *
+     * @param clusterName the cluster name
+     * @return a list of all nodes in {@code clusterName}
+     */
+    public List<PriamInstance> getAllNodesInCluster(String clusterName);
+
+    /**
      * Return the Cassandra server node with the given {@code id}.
-     * @param appName the cluster name
+     * @param appName the app name
      * @param id the node id
      * @return the node with the given {@code id}, or {@code null} if none found
      */
@@ -55,7 +67,7 @@ public interface IPriamInstanceFactory
      * @param token
      * @return the new node
      */
-    public PriamInstance create(String app, int id, String instanceID, String hostname, String ip, String rac, Map<String, Object> volumes, String token);
+    public PriamInstance create(String app, String cluster, int id, String instanceID, String hostname, String ip, String rac, Map<String, Object> volumes, String token);
 
     /**
      * Delete the server node from the registry

@@ -15,11 +15,7 @@
  */
 package com.netflix.priam.defaultimpl;
 
-import java.net.URL;
-import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Properties;
 
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.AmazonEC2Client;
@@ -36,8 +32,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-
 @Singleton
 public class PriamConfiguration implements IConfiguration
 {
@@ -47,6 +41,7 @@ public class PriamConfiguration implements IConfiguration
     private static final String CONFIG_CASS_START_SCRIPT = PRIAM_PRE + ".cass.startscript";
     private static final String CONFIG_CASS_STOP_SCRIPT = PRIAM_PRE + ".cass.stopscript";
     private static final String CONFIG_CLUSTER_NAME = PRIAM_PRE + ".clustername";
+    private static final String CONFIG_APP_NAME = PRIAM_PRE + ".appname";
     private static final String CONFIG_SEED_PROVIDER_NAME = PRIAM_PRE + ".seed.provider";
     private static final String CONFIG_LOAD_LOCAL_PROPERTIES = PRIAM_PRE + ".localbootstrap.enable";
     private static final String CONFIG_MAX_HEAP_SIZE = PRIAM_PRE + ".heap.size.";
@@ -375,7 +370,12 @@ public class PriamConfiguration implements IConfiguration
     }
 
     @Override
-    public String getAppName()
+    public String getApplicationName()
+    {
+        return config.get(CONFIG_APP_NAME, getClusterName());
+    }
+
+    public String getClusterName()
     {
         return config.get(CONFIG_CLUSTER_NAME, DEFAULT_CLUSTER_NAME);
     }
@@ -481,7 +481,7 @@ public class PriamConfiguration implements IConfiguration
     @Override
     public String getACLGroupName()
     {
-    	return config.get(CONFIG_ACL_GROUP_NAME, this.getAppName());
+    	return config.get(CONFIG_ACL_GROUP_NAME, this.getApplicationName());
     }
 
     @Override

@@ -42,7 +42,7 @@ public class PriamInstanceResourceTest
             List<PriamInstance> instances = ImmutableList.of(instance1, instance2, instance3);
 
             {
-                config.getAppName(); result = APP_NAME;
+                config.getApplicationName(); result = APP_NAME;
                 factory.getAllIds(APP_NAME); result = instances;
                 instance1.toString(); result = "instance1";
                 instance2.toString(); result = "instance2";
@@ -61,7 +61,7 @@ public class PriamInstanceResourceTest
             PriamInstance instance;
 
             {
-                config.getAppName(); result = APP_NAME;
+                config.getApplicationName(); result = APP_NAME;
                 factory.getInstance(APP_NAME, config.getDC(), NODE_ID); result = instance;
                 instance.toString(); result = expected;
             }
@@ -74,7 +74,7 @@ public class PriamInstanceResourceTest
     public void getInstance_notFound()
     {
         new Expectations() {{
-            config.getAppName(); result = APP_NAME;
+            config.getApplicationName(); result = APP_NAME;
             factory.getInstance(APP_NAME, config.getDC(), NODE_ID); result = null;
         }};
 
@@ -102,8 +102,9 @@ public class PriamInstanceResourceTest
           PriamInstance instance;
 
           {
-              config.getAppName(); result = APP_NAME;
-              factory.create(APP_NAME, NODE_ID, instanceID, hostname, ip, rack, null, token); result = instance;
+              config.getApplicationName(); result = APP_NAME;
+              config.getClusterName(); result = APP_NAME;
+              factory.create(APP_NAME, APP_NAME, NODE_ID, instanceID, hostname, ip, rack, null, token); result = instance;
               instance.getId(); result = NODE_ID;
           }
         };
@@ -120,7 +121,7 @@ public class PriamInstanceResourceTest
           PriamInstance instance;
 
           {
-              config.getAppName(); result = APP_NAME;
+              config.getApplicationName(); result = APP_NAME;
               factory.getInstance(APP_NAME, config.getDC(), NODE_ID); result = instance;
               factory.delete(instance);
           }
@@ -134,7 +135,7 @@ public class PriamInstanceResourceTest
     public void deleteInstance_notFound()
     {
         new Expectations() {{
-            config.getAppName(); result = APP_NAME;
+            config.getApplicationName(); result = APP_NAME;
             factory.getInstance(APP_NAME, config.getDC(), NODE_ID); result = null;
         }};
 

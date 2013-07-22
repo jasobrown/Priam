@@ -21,11 +21,25 @@ import java.util.List;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Ordering;
+import com.google.inject.Inject;
+import com.netflix.priam.IConfiguration;
 
 public class TokenManager implements ITokenManager
 {    
     public static final BigInteger MINIMUM_TOKEN = BigInteger.ZERO;
     public static final BigInteger MAXIMUM_TOKEN = new BigInteger("2").pow(127);
+    private final IConfiguration config;
+
+    public TokenManager()
+    {
+        this(null);
+    }
+
+    @Inject
+    public TokenManager(IConfiguration config)
+    {
+        this.config = config;
+    }
 
     /**
      * Calculate a token for the given position, evenly spaced from other size-1 nodes.  See
@@ -98,6 +112,12 @@ public class TokenManager implements ITokenManager
     @Override
     public int regionOffset(String region)
     {
-        return Math.abs(region.hashCode());
+        int offset = Math.abs(region.hashCode());
+
+        //need to further modify the offset if we're running multiple c* datacenters in the same region for the same cluster
+        if(config != null && !config.getApplicationName().equals(config.getClusterName()))
+            offset += Math.abs(config.getApplicationName().hashCode());
+
+        return offset;
     }
 }

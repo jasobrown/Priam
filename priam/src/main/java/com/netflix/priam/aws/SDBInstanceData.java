@@ -54,9 +54,11 @@ public class SDBInstanceData
         public final static String UPDATE_TS = "updateTimestamp";
         public final static String LOCATION = "location";
         public final static String HOSTNAME = "hostname";
+        public final static String CLUSTER = "cluster";
     }
     public static final String DOMAIN = "InstanceIdentity";
     public static final String ALL_QUERY = "select * from " + DOMAIN + " where " + Attributes.APP_ID + "='%s'";
+    public static final String ALL_IN_CLUSTER_QUERY = "select * from " + DOMAIN + " where " + Attributes.CLUSTER + "='%s'";
     public static final String INSTANCE_QUERY = "select * from " + DOMAIN + " where " + Attributes.APP_ID + "='%s ' and " + Attributes.LOCATION + "='%s ' and " + Attributes.ID + "='%d'";
 
     private final ICredential provider;
@@ -87,17 +89,22 @@ public class SDBInstanceData
     /**
      * Get the set of all nodes in the cluster
      * 
-     * @param app Cluster name
+     * @param app app name
      * @return the set of all instances in the given {@code app}
      */
     public Set<PriamInstance> getAllIds(String app)
+    {
+        return getAllInstances(String.format(ALL_QUERY, app));
+    }
+
+    protected Set<PriamInstance> getAllInstances(String selectQuery)
     {
         AmazonSimpleDBClient simpleDBClient = getSimpleDBClient();
         Set<PriamInstance> inslist = new HashSet<PriamInstance>();
         String nextToken = null;
         do
         {
-            SelectRequest request = new SelectRequest(String.format(ALL_QUERY, app));
+            SelectRequest request = new SelectRequest();
             request.setNextToken(nextToken);
             SelectResult result = simpleDBClient.select(request);
             nextToken = result.getNextToken();
@@ -109,6 +116,17 @@ public class SDBInstanceData
 
         } while (nextToken != null);
         return inslist;
+    }
+
+    /**
+     * Get the set of all nodes in the cluster
+     *
+     * @param cluster Cluster name
+     * @return the set of all instances in the given {@code app}
+     */
+    public Set<PriamInstance> getAllNodesInCluster(String cluster)
+    {
+        return getAllIn stances(String.format(ALL_IN_CLUSTER_QUERY, cluster));
     }
 
     /**
@@ -167,6 +185,7 @@ public class SDBInstanceData
         attrs.add(new ReplaceableAttribute(Attributes.HOSTNAME, instance.getHostName(), true));
         attrs.add(new ReplaceableAttribute(Attributes.LOCATION, instance.getDC(), true));
         attrs.add(new ReplaceableAttribute(Attributes.UPDATE_TS, Long.toString(instance.getUpdatetime()), true));
+        attrs.add(new ReplaceableAttribute(Attributes.CLUSTER, instance.getCluster(), true));
         return attrs;
     }
 
@@ -182,6 +201,7 @@ public class SDBInstanceData
         attrs.add(new Attribute(Attributes.HOSTNAME, instance.getHostName()));
         attrs.add(new Attribute(Attributes.LOCATION, instance.getDC()));
         attrs.add(new Attribute(Attributes.UPDATE_TS, Long.toString(instance.getUpdatetime())));
+        attrs.add(new Attribute(Attributes.CLUSTER, instance.getCluster()));
         return attrs;
     }
 
@@ -202,6 +222,8 @@ public class SDBInstanceData
                 ins.setInstanceId(att.getValue());
             else if (att.getName().equals(Attributes.TOKEN))
                 ins.setToken(att.getValue());
+            else if (att.getName().equals(Attributes.CLUSTER))
+                ins.setCluster(att.getValue());
             else if (att.getName().equals(Attributes.APP_ID))
                 ins.setApp(att.getValue());
             else if (att.getName().equals(Attributes.ID))

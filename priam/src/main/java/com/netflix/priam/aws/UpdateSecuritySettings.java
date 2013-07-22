@@ -73,11 +73,11 @@ public class UpdateSecuritySettings extends Task
         // if seed dont execute.
         int port = config.getSSLStoragePort();
         List<String> acls = membership.listACL(port, port);
-        List<PriamInstance> instances = factory.getAllIds(config.getAppName());
+        List<PriamInstance> instances = factory.getAllIds(config.getApplicationName());
 
         // iterate to add...
         List<String> add = Lists.newArrayList();
-        for (PriamInstance instance : factory.getAllIds(config.getAppName()))
+        for (PriamInstance instance : factory.getAllIds(config.getApplicationName()))
         {
             String range = instance.getHostIP() + "/32";
             if (!acls.contains(range))

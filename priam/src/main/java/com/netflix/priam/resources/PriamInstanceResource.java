@@ -64,7 +64,7 @@ public class PriamInstanceResource
     public String getInstances()
     {
         StringBuilder response = new StringBuilder();
-        for (PriamInstance node : factory.getAllIds(config.getAppName()))
+        for (PriamInstance node : factory.getAllIds(config.getApplicationName()))
         {
             response.append(node.toString());
             response.append("\n");
@@ -101,7 +101,7 @@ public class PriamInstanceResource
     {
         log.info("Creating instance [id={}, instanceId={}, hostname={}, ip={}, rack={}, token={}",
             new Object[]{ id, instanceID, hostname, ip, rack, token });
-        PriamInstance instance = factory.create(config.getAppName(), id, instanceID, hostname, ip, rack, null, token);
+        PriamInstance instance = factory.create(config.getApplicationName(), config.getClusterName(), id, instanceID, hostname, ip, rack, null, token);
         URI uri = UriBuilder.fromPath("/{id}").build(instance.getId());
         return Response.created(uri).build();
     }
@@ -132,7 +132,7 @@ public class PriamInstanceResource
      */
     private PriamInstance getByIdIfFound(int id)
     {
-        PriamInstance instance = factory.getInstance(config.getAppName(), config.getDC(), id);
+        PriamInstance instance = factory.getInstance(config.getApplicationName(), config.getDC(), id);
         if (instance == null) {
             throw notFound(String.format("No priam instance with id %s found", id));
         }

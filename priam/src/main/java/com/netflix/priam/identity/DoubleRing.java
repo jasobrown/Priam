@@ -59,7 +59,7 @@ public class DoubleRing
      */
     public void doubleSlots()
     {
-        List<PriamInstance> local = filteredRemote(factory.getAllIds(config.getAppName()));
+        List<PriamInstance> local = filteredRemote(factory.getAllIds(config.getApplicationName()));
 
         // delete all
         for (PriamInstance data : local)
@@ -70,17 +70,17 @@ public class DoubleRing
         for (PriamInstance data : local)
         {
             int slot = (data.getId() - hash) * 2;
-            factory.create(data.getApp(), hash + slot, data.getInstanceId(), data.getHostName(), data.getHostIP(), data.getRac(), data.getVolumes(), data.getToken());
+            factory.create(data.getApp(), data.getCluster(), hash + slot, data.getInstanceId(), data.getHostName(), data.getHostIP(), data.getRac(), data.getVolumes(), data.getToken());
         }
 
         int new_ring_size = local.size() * 2;
-        for (PriamInstance data : filteredRemote(factory.getAllIds(config.getAppName())))
+        for (PriamInstance data : filteredRemote(factory.getAllIds(config.getApplicationName())))
         {
             // if max then rotate.
             int currentSlot = data.getId() - hash;
             int new_slot = currentSlot + 3 > new_ring_size ? (currentSlot + 3) - new_ring_size : currentSlot + 3;
             String token = tokenManager.createToken(new_slot, new_ring_size, config.getDC());
-            factory.create(data.getApp(), new_slot + hash, "new_slot", config.getHostname(), config.getHostIP(), data.getRac(), null, token);
+            factory.create(data.getApp(), data.getCluster(), new_slot + hash, "new_slot", config.getHostname(), config.getHostIP(), data.getRac(), null, token);
         }
     }
 
@@ -105,7 +105,7 @@ public class DoubleRing
         ObjectOutputStream stream = new ObjectOutputStream(out);
         try
         {
-            stream.writeObject(filteredRemote(factory.getAllIds(config.getAppName())));
+            stream.writeObject(filteredRemote(factory.getAllIds(config.getApplicationName())));
             logger.info("Wrote the backup of the instances to: " + TMP_BACKUP_FILE.getAbsolutePath());
         }
         finally
@@ -123,7 +123,7 @@ public class DoubleRing
      */
     public void restore() throws IOException, ClassNotFoundException
     {
-        for (PriamInstance data : filteredRemote(factory.getAllIds(config.getAppName())))
+        for (PriamInstance data : filteredRemote(factory.getAllIds(config.getApplicationName())))
             factory.delete(data);
 
         // read from the file.
@@ -134,7 +134,7 @@ public class DoubleRing
             @SuppressWarnings("unchecked")
             List<PriamInstance> allInstances = (List<PriamInstance>) stream.readObject();
             for (PriamInstance data : allInstances)
-                factory.create(data.getApp(), data.getId(), data.getInstanceId(), data.getHostName(), data.getHostIP(), data.getRac(), data.getVolumes(), data.getToken());
+                factory.create(data.getApp(), data.getCluster(), data.getId(), data.getInstanceId(), data.getHostName(), data.getHostIP(), data.getRac(), data.getVolumes(), data.getToken());
             logger.info("Sucecsfully restored the Instances from the backup: " + TMP_BACKUP_FILE.getAbsolutePath());
         }
         finally
