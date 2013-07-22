@@ -64,17 +64,29 @@ public class SDBInstanceFactory implements IPriamInstanceFactory
     }
 
     @Override
+    public List<PriamInstance> getAllNodesInCluster(String clusterName)
+    {
+        List<PriamInstance> return_ = new ArrayList<PriamInstance>();
+        for (PriamInstance instance : dao.getAllNodesInCluster(clusterName))
+        {
+            return_.add(instance);
+        }
+        sort(return_);
+        return return_;
+    }
+
+    @Override
     public PriamInstance getInstance(String appName, String dc, int id)
     {
       return dao.getInstance(appName, dc, id);
     }
 
     @Override
-    public PriamInstance create(String app, int id, String instanceID, String hostname, String ip, String rac, Map<String, Object> volumes, String token)
+    public PriamInstance create(String app, String cluster, int id, String instanceID, String hostname, String ip, String rac, Map<String, Object> volumes, String token)
     {
         try
         {
-            PriamInstance ins = makePriamInstance(app, id, instanceID, hostname, ip, rac, volumes, token);
+            PriamInstance ins = makePriamInstance(app, cluster, id, instanceID, hostname, ip, rac, volumes, token);
             // remove old data node which are dead.
             if (app.endsWith("-dead"))
             {
@@ -150,10 +162,11 @@ public class SDBInstanceFactory implements IPriamInstanceFactory
         // TODO Auto-generated method stub
     }
 
-    private PriamInstance makePriamInstance(String app, int id, String instanceID, String hostname, String ip, String rac, Map<String, Object> volumes, String token)
+    private PriamInstance makePriamInstance(String app, String cluster, int id, String instanceID, String hostname, String ip, String rac, Map<String, Object> volumes, String token)
     {
         Map<String, Object> v = (volumes == null) ? new HashMap<String, Object>() : volumes;
         PriamInstance ins = new PriamInstance();
+        ins.setCluster(cluster);
         ins.setApp(app);
         ins.setRac(rac);
         ins.setHost(hostname);

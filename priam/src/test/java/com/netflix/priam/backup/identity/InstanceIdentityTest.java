@@ -73,7 +73,7 @@ public class InstanceIdentityTest extends InstanceTestUtils
         createInstances();
         int before = factory.getAllIds("fake-app").size();
         new DoubleRing(config, factory, tokenManager).doubleSlots();
-        List<PriamInstance> lst = factory.getAllIds(config.getAppName());
+        List<PriamInstance> lst = factory.getAllIds(config.getApplicationName());
         // sort it so it will look good if you want to print it.
         factory.sort(lst);
         for (int i = 0; i < lst.size(); i++)

@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Singleton;
-import com.netflix.priam.IConfiguration;
 import com.netflix.priam.defaultimpl.PriamConfiguration;
 
 @Singleton
@@ -150,7 +149,12 @@ public class FakeConfiguration implements IConfiguration
     }
 
     @Override
-    public String getAppName()
+    public String getApplicationName()
+    {
+        return appName;
+    }
+
+    public String getClusterName()
     {
         return appName;
     }
@@ -158,7 +162,7 @@ public class FakeConfiguration implements IConfiguration
     @Override
     public String getACLGroupName()
     {
-        return this.getAppName();
+        return this.getApplicationName();
     }
 
     @Override

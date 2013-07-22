@@ -18,9 +18,7 @@ package com.netflix.priam.resources;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -262,7 +260,7 @@ public class BackupServlet
      */
     private String closestToken(String token, String region)
     {
-        List<PriamInstance> plist = factory.getAllIds(config.getAppName());
+        List<PriamInstance> plist = factory.getAllIds(config.getApplicationName());
         List<BigInteger> tokenList = Lists.newArrayList();
         for (PriamInstance ins : plist)
         {
@@ -304,7 +302,7 @@ public class BackupServlet
 					continue;
 				backupJSON.put("bucket", config.getBackupPrefix());
 				backupJSON.put("filename", p.getRemotePath());
-				backupJSON.put("app", p.getClusterName());
+				backupJSON.put("app", p.getApplicationName());
 				backupJSON.put("region", p.getRegion());
 				backupJSON.put("token", p.getToken());
 				backupJSON.put("ts", new DateTime(p.getTime()).toString(FMT));

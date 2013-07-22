@@ -26,6 +26,7 @@ public class PriamInstance implements Serializable
     private boolean outOfService;
 
     private String app;
+    private String cluster;
     private int Id;
     private String instanceId;
     private String availabilityZone;
@@ -124,8 +125,8 @@ public class PriamInstance implements Serializable
     @Override
     public String toString()
     {
-        return String.format("Hostname: %s, InstanceId: %s, APP_NAME: %s, RAC : %s Location %s, Id: %s: Token: %s", getHostName(), getInstanceId(), getApp(), getRac(), getDC(), getId(),
-                getToken());
+        return String.format("Hostname: %s, InstanceId: %s, APP_NAME: %s, Cluster name: %s, RAC : %s, Location %s, Id: %s: Token: %s",
+                getHostName(), getInstanceId(), getApp(), getCluster(), getRac(), getDC(), getId(), getToken());
     }
 
     public String getDC()
@@ -158,5 +159,13 @@ public class PriamInstance implements Serializable
         this.outOfService = outOfService;
     }
 
+    public String getCluster()
+    {
+        return cluster == null ? getApp() : cluster;
+    }
 
+    public void setCluster(String cluster)
+    {
+        this.cluster = cluster;
+    }
 }

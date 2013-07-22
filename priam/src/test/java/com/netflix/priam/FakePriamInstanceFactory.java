@@ -28,16 +28,23 @@ public class FakePriamInstanceFactory implements IPriamInstanceFactory
     {
         return new ArrayList<PriamInstance>(instances.values());
     }
-    
+
+    @Override
+    public List<PriamInstance> getAllNodesInCluster(String clusterName)
+    {
+        return getAllIds(clusterName);
+    }
+
     @Override
     public PriamInstance getInstance(String appName, String dc, int id) {
       return instances.get(id);
     }
 
     @Override
-    public PriamInstance create(String app, int id, String instanceID, String hostname, String ip, String rac, Map<String, Object> volumes, String payload)
+    public PriamInstance create(String app, String cluster, int id, String instanceID, String hostname, String ip, String rac, Map<String, Object> volumes, String payload)
     {
         PriamInstance ins = new PriamInstance();
+        ins.setCluster(cluster);
         ins.setApp(app);
         ins.setRac(rac);
         ins.setHost(hostname, ip);

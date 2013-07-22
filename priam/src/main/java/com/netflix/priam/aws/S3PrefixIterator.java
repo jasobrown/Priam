@@ -141,7 +141,7 @@ public class S3PrefixIterator implements Iterator<AbstractBackupPath>
         {
             buff.append(config.getBackupLocation()).append(S3BackupPath.PATH_SEP);
             buff.append(config.getDC()).append(S3BackupPath.PATH_SEP);
-            buff.append(config.getAppName()).append(S3BackupPath.PATH_SEP);
+            buff.append(config.getApplicationName()).append(S3BackupPath.PATH_SEP);
         }
         else
         {

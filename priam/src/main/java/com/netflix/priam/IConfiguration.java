@@ -141,9 +141,15 @@ public interface IConfiguration
     public String getSnitch();
 
     /**
+     * @return Application name, maybe be the same as {@code getApplicationName}, but it more of an abstraction
+     * around the cluster name.
+     */
+    public String getApplicationName();
+
+    /**
      * @return Cluster name
      */
-    public String getAppName();
+    public String getClusterName();
 
     /**
      * @return RAC (or zone for AWS)

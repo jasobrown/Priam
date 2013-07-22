@@ -98,7 +98,7 @@ public class InstanceIdentity
             public PriamInstance retriableCall() throws Exception
             {
                 // Check if this node is decomissioned
-                for (PriamInstance ins : factory.getAllIds(config.getAppName() + "-dead"))
+                for (PriamInstance ins : factory.getAllIds(config.getApplicationName() + "-dead"))
                 {
                     logger.debug(String.format("[Dead] Iterating though the hosts: %s", ins.getInstanceId()));
                     if (ins.getInstanceId().equals(config.getInstanceName()))
@@ -107,7 +107,7 @@ public class InstanceIdentity
                         return ins;
                     }
                 }
-                for (PriamInstance ins : factory.getAllIds(config.getAppName()))
+                for (PriamInstance ins : factory.getAllIds(config.getApplicationName()))
                 {
                     logger.debug(String.format("[Alive] Iterating though the hosts: %s My id = [%s]", ins.getInstanceId(),ins.getId()));
                     if (ins.getInstanceId().equals(config.getInstanceName()))
@@ -132,7 +132,7 @@ public class InstanceIdentity
     private void populateRacMap()
     {
         locMap.clear();
-        for (PriamInstance ins : factory.getAllIds(config.getAppName()))
+        for (PriamInstance ins : factory.getAllIds(config.getApplicationName()))
         {
         		locMap.put(ins.getRac(), ins);
         }
@@ -143,7 +143,7 @@ public class InstanceIdentity
         @Override
         public PriamInstance retriableCall() throws Exception
         {
-            final List<PriamInstance> allIds = factory.getAllIds(config.getAppName());
+            final List<PriamInstance> allIds = factory.getAllIds(config.getApplicationName());
             List<String> asgInstances = membership.getRacMembership();
             // Sleep random interval - upto 15 sec
             sleeper.sleep(new Random().nextInt(5000) + 10000);
@@ -153,14 +153,14 @@ public class InstanceIdentity
                 if (!dead.getRac().equals(config.getRac()) || asgInstances.contains(dead.getInstanceId()))
                     continue;
                 logger.info("Found dead instances: " + dead.getInstanceId());
-                PriamInstance markAsDead = factory.create(dead.getApp() + "-dead", dead.getId(), dead.getInstanceId(), dead.getHostName(), dead.getHostIP(), dead.getRac(), dead.getVolumes(),
+                PriamInstance markAsDead = factory.create(dead.getApp() + "-dead", config.getClusterName() + "-dead", dead.getId(), dead.getInstanceId(), dead.getHostName(), dead.getHostIP(), dead.getRac(), dead.getVolumes(),
                         dead.getToken());
                 // remove it as we marked it down...
                 factory.delete(dead);
                 isReplace = true;
                 String payLoad = markAsDead.getToken();
                 logger.info("Trying to grab slot {} with availability zone {}", markAsDead.getId(), markAsDead.getRac());
-                return factory.create(config.getAppName(), markAsDead.getId(), config.getInstanceName(), config.getHostname(), config.getHostIP(), config.getRac(), markAsDead.getVolumes(), payLoad);
+                return factory.create(config.getApplicationName(), config.getClusterName(), markAsDead.getId(), config.getInstanceName(), config.getHostname(), config.getHostIP(), config.getRac(), markAsDead.getVolumes(), payLoad);
             }
             return null;
         }
@@ -183,7 +183,7 @@ public class InstanceIdentity
             // regions.
 
             int max = hash;
-            for (PriamInstance data : factory.getAllIds(config.getAppName()))
+            for (PriamInstance data : factory.getAllIds(config.getApplicationName()))
                 max = (data.getRac().equals(config.getRac()) && (data.getId() > max)) ? data.getId() : max;
             int maxSlot = max - hash;
             int my_slot = 0;
@@ -197,7 +197,8 @@ public class InstanceIdentity
             logger.info(String.format("Trying to createToken with slot %d with rac count %d with rac membership size %d with dc %s",
                     my_slot, membership.getRacCount(), membership.getRacMembershipSize(), config.getDC()));
             String payload = tokenManager.createToken(my_slot, membership.getRacCount(), membership.getRacMembershipSize(), config.getDC());
-            return factory.create(config.getAppName(), my_slot + hash, config.getInstanceName(), config.getHostname(), config.getHostIP(), config.getRac(), null, payload);
+            return factory.create(config.getApplicationName(), config.getClusterName(),
+                    my_slot + hash, config.getInstanceName(), config.getHostname(), config.getHostIP(), config.getRac(), null, payload);
         }
 
         public void forEachExecution()
