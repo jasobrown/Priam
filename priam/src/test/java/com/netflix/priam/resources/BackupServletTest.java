@@ -43,12 +43,13 @@ public class BackupServletTest
     private @Mocked SnapshotBackup snapshotBackup;
     private @Mocked IPriamInstanceFactory factory;
     private @Mocked ICassandraProcess cassProcess;
-    private final ITokenManager tokenManager = new TokenManager();
+    private ITokenManager tokenManager;
     private BackupServlet resource;
 
     @Before
     public void setUp()
     {
+        tokenManager = new TokenManager(config);
         resource = new BackupServlet(priamServer, config, bkpFs, bkpStatusFs, restoreObj, pathProvider,
             tuner, snapshotBackup, factory, tokenManager, cassProcess);
     }

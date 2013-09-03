@@ -4,6 +4,7 @@ import com.netflix.priam.identity.DoubleRing;
 import com.netflix.priam.identity.PriamInstance;
 import com.netflix.priam.utils.ITokenManager;
 import com.netflix.priam.utils.TokenManager;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
@@ -12,7 +13,15 @@ import static org.junit.Assert.assertEquals;
 
 public class InstanceIdentityTest extends InstanceTestUtils
 {
-    private static final ITokenManager tokenManager = new TokenManager();
+    private ITokenManager tokenManager;
+
+    @Before
+    public void setup()
+    {
+        super.setup();
+        tokenManager = new TokenManager(super.config);
+    }
+
 
     @Test
     public void testCreateToken() throws Exception

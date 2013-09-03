@@ -4,6 +4,8 @@ import java.math.BigInteger;
 import java.util.Collections;
 import java.util.List;
 
+import com.netflix.priam.FakeConfiguration;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableList;
@@ -14,8 +16,15 @@ import static org.junit.Assert.assertFalse;
 
 public class TokenManagerTest
 {
-    private static final TokenManager tokenManager = new TokenManager();
-    
+    private TokenManager tokenManager;
+
+    @Before
+    public void setup()
+    {
+        tokenManager = new TokenManager(new FakeConfiguration("fake", "fake-app", "az1", "fakeinstance1"));
+    }
+
+
     @Test(expected = IllegalArgumentException.class)
     public void initialToken_zeroSize()
     {

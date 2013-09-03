@@ -64,6 +64,6 @@ public abstract class InstanceTestUtils
     {
         config.zone = zone;
         config.instance_id = instanceId;
-        return new InstanceIdentity(factory, membership, config, sleeper, new TokenManager());
+        return new InstanceIdentity(factory, membership, config, sleeper, new TokenManager(config));
     }
 }

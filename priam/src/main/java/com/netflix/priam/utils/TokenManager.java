@@ -30,11 +30,6 @@ public class TokenManager implements ITokenManager
     public static final BigInteger MAXIMUM_TOKEN = new BigInteger("2").pow(127);
     private final IConfiguration config;
 
-    public TokenManager()
-    {
-        this(null);
-    }
-
     @Inject
     public TokenManager(IConfiguration config)
     {

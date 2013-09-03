@@ -3,6 +3,7 @@ package com.netflix.priam.backup.identity;
 import java.util.List;
 
 import com.netflix.priam.utils.ITokenManager;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.collect.Lists;
@@ -13,7 +14,14 @@ import static org.junit.Assert.assertEquals;
 
 public class DoubleRingTest extends InstanceTestUtils
 {
-    private static final ITokenManager tokenManager = new TokenManager();
+    private ITokenManager tokenManager;
+
+    @Before
+    public void setup()
+    {
+        super.setup();
+        tokenManager = new TokenManager(super.config);
+    }
 
     @Test
     public void testDouble() throws Exception

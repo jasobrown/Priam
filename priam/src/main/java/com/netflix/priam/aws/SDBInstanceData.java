@@ -126,7 +126,7 @@ public class SDBInstanceData
      */
     public Set<PriamInstance> getAllNodesInCluster(String cluster)
     {
-        return getAllIn stances(String.format(ALL_IN_CLUSTER_QUERY, cluster));
+        return getAllInstances(String.format(ALL_IN_CLUSTER_QUERY, cluster));
     }
 
     /**
