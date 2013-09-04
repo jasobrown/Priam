@@ -42,4 +42,10 @@ public interface IDseConfiguration
     String getDseDelegatingSnitch();
 
     NodeType getNodeType();
+
+    /* search (solr) values - if defined property is null, use value from existing yaml */
+    Integer getSearchIndexFixedRateSeconds();
+    Integer getSearchIndexInitialDelay();
+    Integer getSearchIndexMaxDocsPerBatch();
+    Integer getSearchConcurrencyPerCore();
 }

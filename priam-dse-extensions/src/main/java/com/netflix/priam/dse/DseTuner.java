@@ -1,10 +1,11 @@
-package com.netflix.priam.dse;
+    package com.netflix.priam.dse;
 
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -53,6 +54,22 @@ public class DseTuner extends StandardTuner
         @SuppressWarnings("rawtypes")
         Map map = (Map) yaml.load(new FileInputStream(dseYaml));
         map.put("delegated_snitch", config.getSnitch());
+
+        if(dseConfig.getNodeType() == NodeType.SEARCH)
+        {
+            List<?> searchOptions = (List) map.get("ttl_index_rebuild_options");
+            Map<String, String> m = (Map<String, String>) searchOptions.get(0);
+            if(dseConfig.getSearchIndexFixedRateSeconds() != null)
+                m.put("fixed_rate_period", dseConfig.getSearchIndexFixedRateSeconds().toString());
+            if(dseConfig.getSearchIndexInitialDelay() != null)
+                m.put("initial_delay", dseConfig.getSearchIndexInitialDelay().toString());
+            if(dseConfig.getSearchIndexMaxDocsPerBatch() != null)
+                m.put("max_docs_per_batch", dseConfig.getSearchIndexMaxDocsPerBatch().toString());
+
+            if(dseConfig.getSearchConcurrencyPerCore() != null)
+                map.put("max_solr_concurrency_per_core", dseConfig.getSearchConcurrencyPerCore());
+        }
+
         logger.info("Updating dse-yaml:\n" + yaml.dump(map));
         yaml.dump(map, new FileWriter(dseYaml));
     }
