@@ -110,7 +110,7 @@ public class TokenManager implements ITokenManager
         int offset = Math.abs(region.hashCode());
 
         //need to further modify the offset if we're running multiple c* datacenters in the same region for the same cluster
-        if(config != null && !config.getApplicationName().equals(config.getClusterName()))
+        if(!config.getApplicationName().equals(config.getClusterName()))
             offset += Math.abs(config.getApplicationName().hashCode());
 
         return offset;
